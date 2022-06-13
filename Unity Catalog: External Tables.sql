@@ -121,11 +121,15 @@ LIST 's3://alucius-standard-group-b'
 -- COMMAND ----------
 
 -- DBTITLE 1,Apply UC ACLs to external location
-GRANT READ FILES, WRITE FILES ON EXTERNAL LOCATION groupb TO `account users`;
+GRANT READ FILES, WRITE FILES ON EXTERNAL LOCATION groupb TO `Group A`;
 
 -- COMMAND ----------
 
--- DBTITLE 1,Write data in external location
+show grants on external location groupb
+
+-- COMMAND ----------
+
+-- DBTITLE 1,Write data in the external location from UC cluster
 -- MAGIC %python
 -- MAGIC df = spark.createDataFrame([("UC", "is awesome"), ("Delta Sharing", "is magic")])
 -- MAGIC 
