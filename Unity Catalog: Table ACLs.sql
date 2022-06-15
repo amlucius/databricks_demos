@@ -44,20 +44,22 @@
 -- COMMAND ----------
 
 -- DBTITLE 1,Loading sample data to UC
-df2=spark.read.format('csv')\
-.option('inferSchema', 'true')\
-.option('header', 'true')\
-.option('sep', ',')\
-.load('/databricks-datasets/Rdatasets/data-001/csv/ggplot2/diamonds.csv')
-
-display(df2)
+-- MAGIC %python
+-- MAGIC df=spark.read.format('csv')\
+-- MAGIC .option('inferSchema', 'true')\
+-- MAGIC .option('header', 'true')\
+-- MAGIC .option('sep', ',')\
+-- MAGIC .load('/databricks-datasets/Rdatasets/data-001/csv/ggplot2/diamonds.csv')
+-- MAGIC 
+-- MAGIC display(df)
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Writes don't require file paths!
-df2.write\
-.mode('overwrite')\
-.saveAsTable('main.default.diamonds')
+-- MAGIC %python
+-- MAGIC df.write\
+-- MAGIC .mode('overwrite')\
+-- MAGIC .saveAsTable('main.default.diamonds')
 
 -- COMMAND ----------
 
