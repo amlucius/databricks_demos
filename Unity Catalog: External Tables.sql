@@ -76,7 +76,7 @@ select * from hive_metastore.default.wine
 -- DBTITLE 1,Upgrade to Unity Catalog as External Table
 CREATE TABLE main.default.wine
 LOCATION 's3://alucius-standard-group-b/wine'
-WITH (CREDENTIAL group_b_instance_profile);
+WITH (CREDENTIAL `alucius-standard-groupb`);
 
 -- COMMAND ----------
 
@@ -104,7 +104,7 @@ show storage credentials
 
 -- COMMAND ----------
 
-describe storage credential `group_b_instance_profile`
+describe storage credential `alucius-standard-groupb`
 
 -- COMMAND ----------
 
@@ -116,7 +116,7 @@ describe external location groupb
 
 -- COMMAND ----------
 
-LIST 's3://alucius-standard-group-b'
+LIST 's3://alucius-standard-group-b' WITH (CREDENTIAL `alucius-standard-groupb`)
 
 -- COMMAND ----------
 
@@ -166,3 +166,11 @@ display(df2)
 df2.write\
 .mode('overwrite')\
 .saveAsTable('main.default.diamonds')
+
+-- COMMAND ----------
+
+show grants on table main.default.wine
+
+-- COMMAND ----------
+
+revoke select, modify on table main.default.wine from `Group A`
