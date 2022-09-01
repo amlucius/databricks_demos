@@ -54,7 +54,7 @@
 
 -- COMMAND ----------
 
--- DBTITLE 1,Query from Hive metastore
+-- DBTITLE 1,Query from Legacy Hive Metastore
 select * from hive_metastore.default.wine
 
 -- COMMAND ----------
@@ -77,6 +77,10 @@ select * from hive_metastore.default.wine
 CREATE TABLE main.default.wine
 LOCATION 's3://alucius-standard-group-b/wine'
 WITH (CREDENTIAL `alucius-standard-groupb`);
+
+-- COMMAND ----------
+
+select * from main.default.wine
 
 -- COMMAND ----------
 

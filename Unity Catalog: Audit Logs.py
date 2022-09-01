@@ -35,4 +35,24 @@ display(dbutils.fs.ls("s3://alucius-standard-logs/audit-logs"))
 # COMMAND ----------
 
 # DBTITLE 1,Show data for workspace url from above (you cut-and-paste)
-df=spark.read.json("s3://alucius-standard-logs/audit-logs/workspaceId=4052290305502828/*").display()
+df=spark.read.json("s3://alucius-standard-logs/audit-logs/workspaceId=0/*")
+display(df)
+
+# COMMAND ----------
+
+from pyspark.sql.functions import *
+from pyspark.sql.types import StringType, MapType
+
+df1=df\
+.withColumn("email", col("userIdentity.email")) \
+.drop("userIdentity") \
+.withColumn("date_time", from_utc_timestamp(from_unixtime(col("timestamp")/1000), "UTC"))\
+.filter(col("serviceName") == "unityCatalog")\
+.select("requestParams.*", "*")
+
+display(df1)
+
+# COMMAND ----------
+
+df2=df1.select("email", "catalog_name", "changes", "actionName", "securable_full_name", "auditLevel")
+display(df2)
