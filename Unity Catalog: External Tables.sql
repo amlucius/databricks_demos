@@ -54,6 +54,33 @@
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC dbutils.fs.ls('s3://alucius-standard-group-b/wine')
+-- MAGIC display(files)
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC import os
+-- MAGIC #get the landing zone file with the lastest modified date
+-- MAGIC path = path='s3://alucius-standard-group-b'
+-- MAGIC fdpaths = [path+"/"+fd for fd in os.listdir(path)]
+-- MAGIC  
+-- MAGIC list=[]
+-- MAGIC  for fdpath in fdpaths:
+-- MAGIC         statinfo = os.stat(fdpath)
+-- MAGIC         dt = datetime.datetime.fromtimestamp(statinfo.st_mtime)
+-- MAGIC         if dt > ts:
+-- MAGIC             list.append('/' + fdpath.strip('/dbfs'))
+-- MAGIC         else:
+-- MAGIC             None
+-- MAGIC if list:
+-- MAGIC         df=spark.read.format('parquet').load(list)
+-- MAGIC else:
+-- MAGIC     continue
+
+-- COMMAND ----------
+
 -- DBTITLE 1,Query from Legacy Hive Metastore
 select * from hive_metastore.default.wine
 

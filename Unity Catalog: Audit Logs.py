@@ -56,3 +56,28 @@ display(df1)
 
 df2=df1.select("email", "catalog_name", "changes", "actionName", "securable_full_name", "auditLevel")
 display(df2)
+
+# COMMAND ----------
+
+df2=df\
+.withColumn("email", col("userIdentity.email")) \
+.drop("userIdentity") \
+.withColumn("date_time", from_utc_timestamp(from_unixtime(col("timestamp")/1000), "UTC"))\
+.filter((df.serviceName == "accounts") & (df.actionName  == "tokenLogin"))\
+.select("requestParams.*", "*")
+
+display(df2)
+
+# COMMAND ----------
+
+df2=df\
+.withColumn("email", col("userIdentity.email")) \
+.drop("userIdentity") \
+.withColumn("date_time", from_utc_timestamp(from_unixtime(col("timestamp")/1000), "UTC"))\
+.filter(df.actionName  == "tokenLogin")(df.serviceName == "accounts")\
+.select("requestParams.*", "*")
+display(df2)
+
+# COMMAND ----------
+
+
