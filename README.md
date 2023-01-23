@@ -1,3 +1,5 @@
 # databricks_demos
 
-Personally designed demos and notebooks
+Personally designed demos and notebooks.
+
+Mostly UC related.
