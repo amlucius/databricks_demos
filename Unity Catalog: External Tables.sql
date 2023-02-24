@@ -191,6 +191,11 @@ select * from main.default.diamonds
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Managed external schema
+
+-- COMMAND ----------
+
 --create a managed schema in the Group B external location
 create schema main.managed_external
 managed location 's3://alucius-sandbox-group-b'
@@ -206,3 +211,21 @@ managed location 's3://alucius-sandbox-group-b'
 -- COMMAND ----------
 
 select * from main.managed_external.diamonds
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Managed external catalog
+
+-- COMMAND ----------
+
+--create a managed catalog in the Group B external location
+create catalog managed_external
+managed location 's3://alucius-sandbox-group-b'
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC df2.write\
+-- MAGIC .mode('overwrite')\
+-- MAGIC .saveAsTable('managed_external.default.diamonds')
