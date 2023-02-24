@@ -182,4 +182,27 @@ show grants on external location groupb
 
 -- COMMAND ----------
 
-select * from main.default.wine
+select * from main.default.diamonds
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## What about UC managed external locations?
+
+-- COMMAND ----------
+
+--create a managed schema in the Group B external location
+create schema main.managed_external
+managed location 's3://alucius-sandbox-group-b'
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC ##write to the new managed external location
+-- MAGIC df2.write\
+-- MAGIC .mode('overwrite')\
+-- MAGIC .saveAsTable('main.managed_external.diamonds')
+
+-- COMMAND ----------
+
+select * from main.managed_external.diamonds
