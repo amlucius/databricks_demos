@@ -26,7 +26,8 @@
 -- MAGIC .load('/databricks-datasets/wine-quality')
 -- MAGIC 
 -- MAGIC df=df\
--- MAGIC .select([F.col(col).alias(col.replace(' ', '_')) for col in df.columns])
+-- MAGIC .select([F.col(col).alias(col.replace(' ', '_')) for col in df.columns])\
+-- MAGIC .filter("pH is NOT NULL")
 -- MAGIC 
 -- MAGIC display(df)
 
@@ -37,7 +38,7 @@
 -- MAGIC catalog='hive_metastore'
 -- MAGIC schema='default'
 -- MAGIC table='wine'
--- MAGIC path='s3://alucius-standard-group-b/wine'
+-- MAGIC path='s3://alucius-sandbox-group-b/wine'
 -- MAGIC 
 -- MAGIC   
 -- MAGIC df.write\
@@ -55,29 +56,8 @@
 -- COMMAND ----------
 
 -- MAGIC %python
--- MAGIC dbutils.fs.ls('s3://alucius-standard-group-b/wine')
+-- MAGIC files=dbutils.fs.ls('s3://alucius-sandbox-group-b/wine')
 -- MAGIC display(files)
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC import os
--- MAGIC #get the landing zone file with the lastest modified date
--- MAGIC path = path='s3://alucius-standard-group-b'
--- MAGIC fdpaths = [path+"/"+fd for fd in os.listdir(path)]
--- MAGIC  
--- MAGIC list=[]
--- MAGIC  for fdpath in fdpaths:
--- MAGIC         statinfo = os.stat(fdpath)
--- MAGIC         dt = datetime.datetime.fromtimestamp(statinfo.st_mtime)
--- MAGIC         if dt > ts:
--- MAGIC             list.append('/' + fdpath.strip('/dbfs'))
--- MAGIC         else:
--- MAGIC             None
--- MAGIC if list:
--- MAGIC         df=spark.read.format('parquet').load(list)
--- MAGIC else:
--- MAGIC     continue
 
 -- COMMAND ----------
 
@@ -102,8 +82,8 @@ select * from hive_metastore.default.wine
 
 -- DBTITLE 1,Upgrade to Unity Catalog as External Table
 CREATE TABLE main.default.wine
-LOCATION 's3://alucius-standard-group-b/wine'
-WITH (CREDENTIAL `alucius-standard-groupb`);
+LOCATION 's3://alucius-sandbox-group-b/wine'
+WITH (CREDENTIAL `alucius-sandbox-groupb`);
 
 -- COMMAND ----------
 
@@ -135,7 +115,7 @@ show storage credentials
 
 -- COMMAND ----------
 
-describe storage credential `alucius-standard-groupb`
+describe storage credential `alucius-sandbox-groupb`
 
 -- COMMAND ----------
 
@@ -147,7 +127,7 @@ describe external location groupb
 
 -- COMMAND ----------
 
-LIST 's3://alucius-standard-group-b' WITH (CREDENTIAL `alucius-standard-groupb`)
+LIST 's3://alucius-sandbox-group-b' WITH (CREDENTIAL `alucius-sandbox-groupb`)
 
 -- COMMAND ----------
 
@@ -167,13 +147,13 @@ show grants on external location groupb
 -- MAGIC df.write\
 -- MAGIC .mode('overwrite')\
 -- MAGIC .format('csv')\
--- MAGIC .save('s3://alucius-standard-group-b/test_write')
+-- MAGIC .save('s3://alucius-sandbox-group-b/test_write')
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Read the external data
 -- MAGIC %python
--- MAGIC spark.read.csv('s3://alucius-standard-group-b/test_write').display()
+-- MAGIC spark.read.csv('s3://alucius-sandbox-group-b/test_write').display()
 
 -- COMMAND ----------
 
