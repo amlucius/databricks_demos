@@ -163,25 +163,23 @@ show grants on external location groupb
 -- COMMAND ----------
 
 -- DBTITLE 1,Diamonds dataset with UC cluster
-df2=spark.read.format('csv')\
-.option('inferSchema', 'true')\
-.option('header', 'true')\
-.option('sep', ',')\
-.load('/databricks-datasets/Rdatasets/data-001/csv/ggplot2/diamonds.csv')
-
-display(df2)
+-- MAGIC %python
+-- MAGIC df2=spark.read.format('csv')\
+-- MAGIC .option('inferSchema', 'true')\
+-- MAGIC .option('header', 'true')\
+-- MAGIC .option('sep', ',')\
+-- MAGIC .load('/databricks-datasets/Rdatasets/data-001/csv/ggplot2/diamonds.csv')
+-- MAGIC 
+-- MAGIC display(df2)
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Look Mom, no file path!
-df2.write\
-.mode('overwrite')\
-.saveAsTable('main.default.diamonds')
+-- MAGIC %python
+-- MAGIC df2.write\
+-- MAGIC .mode('overwrite')\
+-- MAGIC .saveAsTable('main.default.diamonds')
 
 -- COMMAND ----------
 
-show grants on table main.default.wine
-
--- COMMAND ----------
-
-revoke select, modify on table main.default.wine from `Group A`
+select * from main.default.wine
