@@ -232,3 +232,25 @@ managed location 's3://alucius-sandbox-group-b'
 -- MAGIC .mode('overwrite')\
 -- MAGIC .format('csv')\
 -- MAGIC .save('s3://alucius-sandbox-group-b/__unitystorage/test_write')
+
+-- COMMAND ----------
+
+-- DBTITLE 1,Let's create a managed table in which data is copied to the managed external location
+--create metastore reference to 
+create table if not exists hive_metastore.default.test
+ using csv
+ location 's3://alucius-sandbox-group-b/test_write'
+
+-- COMMAND ----------
+
+select * from hive_metastore.default.test
+
+-- COMMAND ----------
+
+-- DBTITLE 1,Let's create a managed table in which data is copied to the managed external location
+CREATE TABLE managed_external.default.test
+AS SELECT * FROM hive_metastore.default.test
+
+-- COMMAND ----------
+
+select * from managed_external.default.test
