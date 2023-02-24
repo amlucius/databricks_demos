@@ -191,11 +191,7 @@ select * from main.default.diamonds
 
 -- COMMAND ----------
 
--- MAGIC %md
--- MAGIC ## Managed external schema
-
--- COMMAND ----------
-
+-- DBTITLE 1,Managed external schema
 --create a managed schema in the Group B external location
 create schema main.managed_external
 managed location 's3://alucius-sandbox-group-b'
@@ -214,11 +210,7 @@ select * from main.managed_external.diamonds
 
 -- COMMAND ----------
 
--- MAGIC %md
--- MAGIC ## Managed external catalog
-
--- COMMAND ----------
-
+-- DBTITLE 1,Managed external catalog
 --create a managed catalog in the Group B external location
 create catalog managed_external
 managed location 's3://alucius-sandbox-group-b'
@@ -229,3 +221,14 @@ managed location 's3://alucius-sandbox-group-b'
 -- MAGIC df2.write\
 -- MAGIC .mode('overwrite')\
 -- MAGIC .saveAsTable('managed_external.default.diamonds')
+
+-- COMMAND ----------
+
+-- DBTITLE 1,Let's write to the managed external location with a specified file path. Oops!
+-- MAGIC %python
+-- MAGIC df3 = spark.createDataFrame([("UC", "is awesome"), ("Delta Sharing", "is magic")])
+-- MAGIC 
+-- MAGIC df3.write\
+-- MAGIC .mode('overwrite')\
+-- MAGIC .format('csv')\
+-- MAGIC .save('s3://alucius-sandbox-group-b/__unitystorage/test_write')
