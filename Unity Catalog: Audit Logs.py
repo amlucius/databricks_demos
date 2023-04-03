@@ -30,12 +30,12 @@
 # COMMAND ----------
 
 # DBTITLE 1,See contents of audit log bucket
-display(dbutils.fs.ls("s3://alucius-standard-logs/audit-logs"))
+display(dbutils.fs.ls("s3://alucius-sandbox-logs/audit-logs"))
 
 # COMMAND ----------
 
-# DBTITLE 1,Show data for workspace url from above (you cut-and-paste)
-df=spark.read.json("s3://alucius-standard-logs/audit-logs/workspaceId=0/*")
+# DBTITLE 1,Unity Catalog is account-level, so workspace 0
+df=spark.read.json("s3://alucius-sandbox-logs/audit-logs/workspaceId=0/*")
 display(df)
 
 # COMMAND ----------
