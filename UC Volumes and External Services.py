@@ -12,21 +12,21 @@
 
 # DBTITLE 1,Create external volume pointing to .ini file with AWS Keys
 # MAGIC %sql
-# MAGIC create external volume if not exists main.default.al135_ini
-# MAGIC location 's3://databricks-e2demofieldengwest/al135/keys/'
+# MAGIC create external volume if not exists main.default.alucius_dynamodb_credentials
+# MAGIC location 's3://alucius-sandbox-group-b/ddb/'
 
 # COMMAND ----------
 
 # DBTITLE 1,List files to verify
 # MAGIC %python
-# MAGIC dbutils.fs.ls("/Volumes/main/default/al135_ini")
+# MAGIC dbutils.fs.ls("/Volumes/main/default/alucius_dynamodb_credentials")
 
 # COMMAND ----------
 
 # DBTITLE 1,Point AWS Shared Credential File to volume
 import os
 
-os.environ['AWS_SHARED_CREDENTIALS_FILE'] = '/Volumes/main/default/al135_ini/keys.ini'
+os.environ['AWS_SHARED_CREDENTIALS_FILE'] = '/Volumes/main/default/alucius_dynamodb_credentials/dynamodb_credentials.ini'
 
 # COMMAND ----------
 
@@ -35,7 +35,7 @@ import boto3
 
 al135_dynamo = boto3.client(
     "dynamodb",
-    region_name="us-west-2",
+    region_name="us-east-1",
 )
 
 # COMMAND ----------
@@ -43,8 +43,3 @@ al135_dynamo = boto3.client(
 # DBTITLE 1,Call AWS service with client
 response = al135_dynamo.list_tables()
 print(response)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC [Link to user 2 notebook for concurrency test](https://e2-demo-field-eng.cloud.databricks.com/?o=1444828305810485#notebook/4180492550893027/command/4180492550893028)
