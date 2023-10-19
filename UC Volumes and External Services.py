@@ -10,30 +10,47 @@
 
 # COMMAND ----------
 
+df=spark.read.format('csv')\
+.option('inferSchema', 'true')\
+.option('header', 'true')\
+.option('sep', ',')\
+.load('/databricks-datasets/Rdatasets/data-001/csv/ggplot2/diamonds.csv')
+
+df.write\
+.mode('overwrite')\
+.saveAsTable('main.default.diamonds')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from main.default.diamonds
+
+# COMMAND ----------
+
 # DBTITLE 1,Create external volume pointing to .ini file with AWS Keys
 # MAGIC %sql
-# MAGIC create external volume if not exists main.default.alucius_dynamodb_credentials
+# MAGIC create external volume if not exists main.default.lucius_dynamodb_credentials
 # MAGIC location 's3://alucius-sandbox-group-b/ddb/'
 
 # COMMAND ----------
 
 # DBTITLE 1,List files to verify
 # MAGIC %python
-# MAGIC dbutils.fs.ls("/Volumes/main/default/alucius_dynamodb_credentials")
+# MAGIC dbutils.fs.ls("/Volumes/main/default/lucius_dynamodb_credentials")
 
 # COMMAND ----------
 
 # DBTITLE 1,Point AWS Shared Credential File to volume
 import os
 
-os.environ['AWS_SHARED_CREDENTIALS_FILE'] = '/Volumes/main/default/alucius_dynamodb_credentials/dynamodb_credentials.ini'
+os.environ['AWS_SHARED_CREDENTIALS_FILE'] = '/Volumes/main/default/lucius_dynamodb_credentials/dynamodb_credentials.ini'
 
 # COMMAND ----------
 
 # DBTITLE 1,Create boto3 client for user
 import boto3
 
-al135_dynamo = boto3.client(
+lucius_dynamo = boto3.client(
     "dynamodb",
     region_name="us-east-1",
 )
@@ -41,5 +58,5 @@ al135_dynamo = boto3.client(
 # COMMAND ----------
 
 # DBTITLE 1,Call AWS service with client
-response = al135_dynamo.list_tables()
+response = lucius_dynamo.list_tables()
 print(response)
