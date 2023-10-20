@@ -30,7 +30,7 @@ df.write\
 # DBTITLE 1,Create external volume pointing to .ini file with AWS Keys
 # MAGIC %sql
 # MAGIC create external volume if not exists main.default.lucius_dynamodb_credentials
-# MAGIC location 's3://alucius-sandbox-group-b/ddb/'
+# MAGIC location 's3://alucius-sandbox-group-b/ddb/lucius'
 
 # COMMAND ----------
 
@@ -59,4 +59,42 @@ lucius_dynamo = boto3.client(
 
 # DBTITLE 1,Call AWS service with client
 response = lucius_dynamo.list_tables()
+print(response)
+
+# COMMAND ----------
+
+table = lucius_dynamo.create_table(
+    TableName='lucius',
+    KeySchema=[
+        {
+            'AttributeName': 'id',
+            'KeyType': 'HASH'
+        }
+    ],
+    AttributeDefinitions=[
+        {
+            'AttributeName': 'id',
+            'AttributeType': 'S'
+        }
+    ],
+    ProvisionedThroughput={
+        'ReadCapacityUnits': 5,
+        'WriteCapacityUnits': 5
+    }
+)
+
+# COMMAND ----------
+
+table = lucius_dynamo.put_item(
+    TableName="lucius", 
+    Item={
+        "id": {"S": "1234567890"}, 
+        "name": {"S": "John Doe"},
+        "age": {"N": "30"}
+    }
+)
+
+# COMMAND ----------
+
+response=lucius_dynamo.scan(TableName='lucius')
 print(response)
